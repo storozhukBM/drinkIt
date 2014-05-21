@@ -121,4 +121,35 @@ public class Recipe implements Serializable {
     public void setThumbnail(byte[] thumbnail) {
         this.thumbnail = thumbnail;
     }
+
+    public static RecipeBuilder getBuilder() {
+        return new RecipeBuilder();
+    }
+
+    public static class RecipeBuilder {
+
+        public Recipe build(
+                String name,
+                String description,
+                CocktailType cocktailType,
+                Set<IngredientWithQuantity> ingredientsWithQuantities,
+                Set<Option> options,
+                byte[] image,
+                byte[] thumbnail
+        ) {
+            Recipe built = new Recipe();
+            built.setName(name);
+            built.setDescription(description);
+            built.setCocktailType(cocktailType);
+            built.setIngredientsWithQuantities(ingredientsWithQuantities);
+            built.setOptions(options);
+            built.setImage(image);
+            built.setThumbnail(thumbnail);
+            return built;
+        }
+    }
+
+    public String toString() {
+        
+    }
 }
