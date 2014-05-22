@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.kiev.naiv.drinkit.cocktail.model.CocktailType;
 import ua.kiev.naiv.drinkit.cocktail.model.Ingredient;
+import ua.kiev.naiv.drinkit.cocktail.model.Option;
 import ua.kiev.naiv.drinkit.cocktail.model.Recipe;
 import ua.kiev.naiv.drinkit.cocktail.repository.CocktailTypeRepository;
 import ua.kiev.naiv.drinkit.cocktail.repository.IngredientRepository;
+import ua.kiev.naiv.drinkit.cocktail.repository.OptionRepository;
 import ua.kiev.naiv.drinkit.cocktail.repository.RecipeRepository;
 import ua.kiev.naiv.drinkit.cocktail.search.Criteria;
 import ua.kiev.naiv.drinkit.cocktail.search.RecipeComparatorByCriteria;
@@ -35,6 +37,9 @@ public class CocktailServiceImpl implements CocktailService {
 
     @Resource
     CocktailTypeRepository cocktailTypeRepository;
+
+    @Resource
+    OptionRepository optionRepository;
 
     @Override
     public Recipe create(Recipe recipe) {
@@ -91,6 +96,21 @@ public class CocktailServiceImpl implements CocktailService {
         LOGGER.info("getIngredients: found {} records", ingredients.size());
         return ingredients;
     }
+
+    @Override
+    public List<Option> getOptions() {
+        List<Option> options = optionRepository.findAll();
+        LOGGER.info("getOptions: find {} records", options.size());
+        return options;
+    }
+
+    @Override
+    public List<CocktailType> getCocktailTypes() {
+        List<CocktailType> cocktailTypes = cocktailTypeRepository.findAll();
+        LOGGER.info("getCocktailTypes: find {} records", cocktailTypes.size());
+        return cocktailTypes;
+    }
+
 
     @Override
     public Ingredient findIngredientById(int id) {

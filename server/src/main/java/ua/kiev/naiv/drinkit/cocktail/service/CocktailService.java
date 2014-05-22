@@ -2,6 +2,7 @@ package ua.kiev.naiv.drinkit.cocktail.service;
 
 import ua.kiev.naiv.drinkit.cocktail.model.CocktailType;
 import ua.kiev.naiv.drinkit.cocktail.model.Ingredient;
+import ua.kiev.naiv.drinkit.cocktail.model.Option;
 import ua.kiev.naiv.drinkit.cocktail.model.Recipe;
 import ua.kiev.naiv.drinkit.cocktail.search.Criteria;
 
@@ -32,6 +33,10 @@ public interface CocktailService {
 //    List<CocktailType> findAllCocktailType();
 
     List<Ingredient> getIngredients();
+
+    List<Option> getOptions();
+
+    List<CocktailType> getCocktailTypes();
 
     Ingredient findIngredientById(int id);
 
