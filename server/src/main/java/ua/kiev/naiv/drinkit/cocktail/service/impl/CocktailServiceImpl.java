@@ -8,10 +8,7 @@ import ua.kiev.naiv.drinkit.cocktail.model.CocktailType;
 import ua.kiev.naiv.drinkit.cocktail.model.Ingredient;
 import ua.kiev.naiv.drinkit.cocktail.model.Option;
 import ua.kiev.naiv.drinkit.cocktail.model.Recipe;
-import ua.kiev.naiv.drinkit.cocktail.repository.CocktailTypeRepository;
-import ua.kiev.naiv.drinkit.cocktail.repository.IngredientRepository;
-import ua.kiev.naiv.drinkit.cocktail.repository.OptionRepository;
-import ua.kiev.naiv.drinkit.cocktail.repository.RecipeRepository;
+import ua.kiev.naiv.drinkit.cocktail.repository.*;
 import ua.kiev.naiv.drinkit.cocktail.search.Criteria;
 import ua.kiev.naiv.drinkit.cocktail.search.RecipeComparatorByCriteria;
 import ua.kiev.naiv.drinkit.cocktail.search.SearchSpecification;
@@ -41,10 +38,13 @@ public class CocktailServiceImpl implements CocktailService {
     @Resource
     OptionRepository optionRepository;
 
+    @Resource
+    IngredientWithQuantityRepository ingredientWithQuantityRepository;
+
     @Override
     public Recipe create(Recipe recipe) {
-
-        throw new IllegalStateException("Not implemented yet"); //TODO Not implemented
+        recipeRepository.save(recipe);
+        return recipeRepository.save(recipe);
     }
 
     @Override
@@ -76,6 +76,12 @@ public class CocktailServiceImpl implements CocktailService {
     public Recipe getById(int id) {
         return recipeRepository.findOne(id);
     }
+
+//    @Override
+//    public IngredientWithQuantity create(IngredientWithQuantity ingredientWithQuantity) {
+//        ingredientWithQuantityRepository.save(ingredientWithQuantity);
+//        return ingredientWithQuantityRepository.findOne();
+//    }
 
     @Override
     public CocktailType findCocktailTypeById(int id) {
@@ -123,4 +129,14 @@ public class CocktailServiceImpl implements CocktailService {
 //        LOGGER.info("getCocktailTypes: found {} records", cocktailTypes.size());
 //        return cocktailTypes;
 //    }
+
+    @Override
+    public Recipe.RecipeBuilder getRecipeBuilder() {
+        return new Recipe.RecipeBuilder();
+    }
+
+    @Override
+    public Option findOptionById(Integer optionId) {
+        return optionRepository.findOne(optionId);
+    }
 }

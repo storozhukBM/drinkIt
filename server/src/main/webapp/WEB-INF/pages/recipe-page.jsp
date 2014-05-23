@@ -17,52 +17,70 @@
         </h1>
     </div>
 
-    <div id="body" class="center-block">
+    <div id="body">
+
         <h2 class="ra-well-title">Recipe creation form</h2>
-        <form:form method="POST" commandName="recipe"
+        <form:form method="POST" commandName="recipeBuilder"
                    action="add-recipe.html" enctype="multipart/form-data" role="form">
 
-            <div class="form-group">
-                <label>Name: </label>
-                <form:input path="name" type="text" class="k-textbox"/>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>Name: </label>
+                    <form:input path="name" type="text" class="k-textbox"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Description:</label>
+                    <form:textarea path="description" class="k-textbox"/>
+                </div>
+
+                <div class="form-group">
+                    <label>CocktailType:</label>
+                    <form:select id="cocktailType" class="drop_down_menu" path="cocktailType"
+                                 items="${cocktailTypes}" itemLabel="name" itemValue="id"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Option:</label>
+                    <form:select id="options" multiple="multiple" class="multiselect_menu" path="options"
+                                 items="${options}" itemLabel="name" itemValue="id"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Image:</label>
+                    <input type="file" name="image" path="image">
+                </div>
+
+                <div class="form-group">
+                    <label>Thumbnail:</label>
+                    <input type="file" name="thumbnail" path="thumbnail">
+
+                </div>
+                <input type="submit" name="Save"/>
             </div>
 
-            <div class="form-group">
-                <label>Description:</label>
-                <form:textarea path="description" class="k-textbox"/>
+            <div class="col-md-4">
+                <h4 class="ra-well-title"><button id="add_ingredient">Add ingredient</button></h4>
+                    <div class="form-group">
+                        <label>Ingredient:</label>
+                        <form:select id="ingredient" class="drop_down_menu" path="ingredients" name="ingredients[]"
+                                     items="${ingredients}" itemLabel="name" itemValue="id"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity:</label>
+                        <form:input class="numeric" name="quantities[]"
+                                    path="quantities" type="number" value="10" min="0" max="1000"/>
+                    </div>
             </div>
-
-            <div class="form-group">
-                <label>CocktailType:</label>
-                <form:select id="cocktailType" class="drop_down_menu" path="cocktailType"
-                             items="${cocktailTypes}" itemLabel="name" itemValue="id"/>
-            </div>
-
-            <div class="form-group">
-                <label>Option:</label>
-                <form:select id="options" multiple="multiple" class="multiselect_menu" path="options"
-                             items="${options}" itemLabel="name" itemValue="id"/>
-            </div>
-
-            <div class="form-group">
-                <label>Image:</label>
-                <input type="file" name="image" path="image">
-            </div>
-
-            <div class="form-group">
-                <label>Thumbnail:</label>
-                <input type="file" name="thumbnail" path="thumbnail">
-
-            </div>
-
-            <input type="submit" name="Save"/>
         </form:form>
     </div>
+
 </div>
 
 <script>
     $(".drop_down_menu").kendoDropDownList();
     $(".multiselect_menu").kendoMultiSelect().data("kendoMultiSelect");
+    $(".numeric").kendoNumericTextBox({decimals: 1});
 </script>
 
 </body>

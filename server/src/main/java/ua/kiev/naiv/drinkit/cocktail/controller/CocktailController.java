@@ -16,14 +16,16 @@ import ua.kiev.naiv.drinkit.cocktail.common.JsonMixin;
 import ua.kiev.naiv.drinkit.cocktail.mixin.RecipeInfoResult;
 import ua.kiev.naiv.drinkit.cocktail.mixin.RecipeSearchResult;
 import ua.kiev.naiv.drinkit.cocktail.model.Ingredient;
+import ua.kiev.naiv.drinkit.cocktail.model.IngredientWithQuantity;
+import ua.kiev.naiv.drinkit.cocktail.model.Option;
 import ua.kiev.naiv.drinkit.cocktail.model.Recipe;
 import ua.kiev.naiv.drinkit.cocktail.search.Criteria;
 import ua.kiev.naiv.drinkit.cocktail.service.CocktailService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,24 +45,67 @@ public class CocktailController {
     @RequestMapping(value = "/add-recipe", method = RequestMethod.GET)
     public ModelAndView recipePage() {
         ModelAndView modelAndView = new ModelAndView("recipe-page");
-        modelAndView.addObject("recipe", new Recipe());
+        modelAndView.addObject("recipeBuilder", cocktailService.getRecipeBuilder());
         modelAndView.addObject("options", cocktailService.getOptions());
+        modelAndView.addObject("ingredients", cocktailService.getIngredients());
         modelAndView.addObject("cocktailTypes", cocktailService.getCocktailTypes());
         return modelAndView;
     }
 
     @RequestMapping(value = "/add-recipe", method = RequestMethod.POST)
-    public void addRecipe(HttpServletRequest request,
-                          HttpServletResponse response,
+    public void addRecipe(
                           @RequestParam("image") MultipartFile image,
+                          @RequestParam("image") MultipartFile thumbnail,
                           @RequestParam("name") String name,
                           @RequestParam("description") String description,
-                          @RequestParam("cocktailType") Integer[] cocktailTypeId,
-                          @RequestParam("options") Integer[] options
+                          @RequestParam("cocktailType") Integer cocktailTypeId,
+                          @RequestParam("options") Integer[] options,
+                          @RequestParam("ingredients") Integer[] ingredients,
+                          @RequestParam("quantities") Double[] quantities
     ) {
-//        Recipe recipe = (Recipe) command;
-        Integer bla = new Integer(1);
+        Recipe.RecipeBuilder builder = cocktailService.getRecipeBuilder();
+
+        Set<IngredientWithQuantity> ingredientWithQuantitySet = new HashSet<>();
+
+        for (int i=0; i < ingredients.length; i++) {
+            IngredientWithQuantity ingredientWithQuantity = new IngredientWithQuantity();
+            ingredientWithQuantity.setIngredient(cocktailService.findIngredientById(ingredients[i]));
+            ingredientWithQuantity.setQuantity(quantities[i].intValue());
+
+            ingredientWithQuantitySet.add(ingredientWithQuantity);
+        }
+
+        Set<Option> optionsSet = new HashSet<>();
+        for (Integer optionId: options) {
+            optionsSet.add(cocktailService.findOptionById(optionId));
+        }
+        try {
+
+            Recipe recipe = builder.build(
+                    name,
+                    description,
+                    cocktailService.findCocktailTypeById(cocktailTypeId),
+                    ingredientWithQuantitySet,
+                    optionsSet,
+                    image.getBytes(),
+                    thumbnail.getBytes()
+            );
+
+            cocktailService.create(recipe);
+        } catch (IOException e) {
+            LOGGER.error("Can't get bytes from image.", e);
+        }
     }
+
+//    @RequestMapping(value = "/add-ingredient-with-quantity", method = RequestMethod.GET)
+//    public ModelAndView addIngredientWithQuantity(
+//            HttpServletRequest request,
+//            HttpServletResponse response,
+//            @RequestParam("ingredient") Integer ingredient,
+//            @RequestParam("quantity") Integer quantity
+//            ) {
+//
+//    }
 
 	@RequestMapping("/getById")
 	@ResponseBody
