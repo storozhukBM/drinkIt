@@ -43,7 +43,6 @@ public class CocktailServiceImpl implements CocktailService {
 
     @Override
     public Recipe create(Recipe recipe) {
-        recipeRepository.save(recipe);
         return recipeRepository.save(recipe);
     }
 
