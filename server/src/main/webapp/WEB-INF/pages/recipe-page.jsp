@@ -60,16 +60,21 @@
             </div>
 
             <div class="col-md-4">
-                <h4 class="ra-well-title"><button id="add_ingredient">Add ingredient</button></h4>
-                    <div class="form-group">
-                        <label>Ingredient:</label>
-                        <form:select id="ingredient" class="drop_down_menu" path="ingredients" name="ingredients[]"
-                                     items="${ingredients}" itemLabel="name" itemValue="id"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Quantity:</label>
-                        <form:input class="numeric" name="quantities[]"
-                                    path="quantities" type="number" value="10" min="0" max="1000"/>
+                <h4 class="ra-well-title"><a href="#" id="add_ingredient">Add ingredient</a></h4>
+                    <div id="resizeable">
+                        <span id="to_clone">
+                            <div class="form-group">
+                                <label>Ingredient:</label>
+                                <form:select class="form-control" id="ingredient" path="ingredients" name="ingredients[]"
+                                             items="${ingredients}" itemLabel="name" itemValue="id"/>
+
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity:</label>
+                                <form:input class="form-control" name="quantities[]"
+                                            path="quantities" type="number" value="10" min="0" max="1000"/>
+                            </div>
+                        </span>
                     </div>
             </div>
         </form:form>
@@ -77,10 +82,29 @@
 
 </div>
 
-<script>
+<script type="text/javascript">
     $(".drop_down_menu").kendoDropDownList();
     $(".multiselect_menu").kendoMultiSelect().data("kendoMultiSelect");
-    $(".numeric").kendoNumericTextBox({decimals: 1});
+    $("#ingredient").removeProp("multiple");
+    $(function() {
+        var scntDiv = jQuery('#resizeable');
+        var i = jQuery('#to_clone').size() + 1;
+        var etalon = jQuery('#resizeable span');
+
+        jQuery('#add_ingredient').on("click", function() {
+            var newField = etalon.clone();
+            jQuery('<a href="#" id="remScnt">Remove</a>').appendTo(newField);
+            newField.appendTo(scntDiv);
+            i++;
+        });
+
+        jQuery('#resizeable').on("click", '#remScnt', function() {
+            if( i > 2 ) {
+                $(this).parents('span').remove();
+                i--;
+            }
+        });
+    });
 </script>
 
 </body>
