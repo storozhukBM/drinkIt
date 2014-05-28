@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap-rtl.css' type="text/css">
@@ -20,41 +21,49 @@
     <div id="body">
 
         <h2 class="ra-well-title">Recipe creation form</h2>
-        <form:form method="POST" commandName="recipeBuilder"
+        <c:if test="${not empty successMessage}">
+            <div class="alert alert-info">${successMessage}</div>
+        </c:if>
+        <form:form method="POST"
                    action="add-recipe.html" enctype="multipart/form-data" role="form">
 
             <div class="col-md-8">
                 <div class="form-group">
                     <label>Name: </label>
                     <form:input path="name" type="text" class="k-textbox"/>
+                    <form:errors cssStyle="color: red" path="name" />
                 </div>
 
                 <div class="form-group">
                     <label>Description:</label>
                     <form:textarea path="description" class="k-textbox"/>
+                    <form:errors cssStyle="color: red" path="description" />
                 </div>
 
                 <div class="form-group">
                     <label>CocktailType:</label>
                     <form:select id="cocktailType" class="drop_down_menu" path="cocktailType"
                                  items="${cocktailTypes}" itemLabel="name" itemValue="id"/>
+                    <form:errors cssStyle="color: red" path="cocktailType" />
                 </div>
 
                 <div class="form-group">
                     <label>Option:</label>
                     <form:select id="options" multiple="multiple" class="multiselect_menu" path="options"
                                  items="${options}" itemLabel="name" itemValue="id"/>
+                    <form:errors cssStyle="color: red" path="options" />
                 </div>
 
                 <div class="form-group">
                     <label>Image:</label>
                     <input type="file" name="image" path="image">
+                    <form:errors cssStyle="color: red" path="image" />
                 </div>
 
                 <div class="form-group">
                     <label>Thumbnail:</label>
                     <input type="file" name="thumbnail" path="thumbnail">
-
+                    <form:errors cssStyle="color: red" path="thumbnail" />
                 </div>
                 <input type="submit" name="Save"/>
             </div>
@@ -67,12 +76,14 @@
                                 <label>Ingredient:</label>
                                 <form:select class="form-control" id="ingredient" path="ingredients" name="ingredients[]"
                                              items="${ingredients}" itemLabel="name" itemValue="id"/>
+                                <form:errors cssStyle="color: red" path="ingredients" />
 
                             </div>
                             <div class="form-group">
                                 <label>Quantity:</label>
                                 <form:input class="form-control" name="quantities[]"
                                             path="quantities" type="number" value="10" min="0" max="1000"/>
+                                <form:errors cssStyle="color: red" path="quantities" />
                             </div>
                         </span>
                     </div>

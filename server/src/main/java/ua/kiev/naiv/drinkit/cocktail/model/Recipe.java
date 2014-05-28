@@ -2,6 +2,7 @@ package ua.kiev.naiv.drinkit.cocktail.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -122,107 +123,9 @@ public class Recipe implements Serializable {
         this.thumbnail = thumbnail;
     }
 
-    public static RecipeBuilder getBuilder() {
-        return new RecipeBuilder();
-    }
-
-    public static class RecipeBuilder {
-
-        Recipe built = new Recipe();
-        String name;
-        String description;
-        CocktailType cocktailType;
-        String[] ingredients;
-        Integer[] quantities;
-        Set<Option> options;
-        byte[] image;
-        byte[] thumbnail;
-
-        public Integer getId() {
-            return built.getId();
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public CocktailType getCocktailType() {
-            return cocktailType;
-        }
-
-        public void setCocktailType(CocktailType cocktailType) {
-            this.cocktailType = cocktailType;
-        }
-
-        public Integer[] getQuantities() {
-            return quantities;
-        }
-
-        public void setQuantities(Integer[] quantities) {
-            this.quantities = quantities;
-        }
-
-        public Set<Option> getOptions() {
-            return options;
-        }
-
-        public void setOptions(Set<Option> options) {
-            this.options = options;
-        }
-
-        public byte[] getImage() {
-            return image;
-        }
-
-        public void setImage(byte[] image) {
-            this.image = image;
-        }
-
-        public byte[] getThumbnail() {
-            return thumbnail;
-        }
-
-        public void setThumbnail(byte[] thumbnail) {
-            this.thumbnail = thumbnail;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String[] getIngredients() {
-            return ingredients;
-        }
-
-        public void setIngredients(String[] ingredients) {
-            this.ingredients = ingredients;
-        }
-
-        public Recipe build(
-                String name,
-                String description,
-                CocktailType cocktailType,
-                Set<IngredientWithQuantity> ingredientsWithQuantities,
-                Set<Option> options,
-                byte[] image,
-                byte[] thumbnail
-        ) {
-            built.setName(name);
-            built.setDescription(description);
-            built.setCocktailType(cocktailType);
-            built.setIngredientsWithQuantities(ingredientsWithQuantities);
-            built.setOptions(options);
-            built.setImage(image);
-            built.setThumbnail(thumbnail);
-            return built;
-        }
+    public String toString() {
+        final ReflectionToStringBuilder reflectionToStringBuilder = new ReflectionToStringBuilder(this);
+        reflectionToStringBuilder.setExcludeFieldNames(new String[] {"image", "thumbnail"});
+        return reflectionToStringBuilder.toString();
     }
 }

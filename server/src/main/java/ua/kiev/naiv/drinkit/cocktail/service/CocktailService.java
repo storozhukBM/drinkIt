@@ -39,8 +39,6 @@ public interface CocktailService {
 
     Ingredient findIngredientById(int id);
 
-    Recipe.RecipeBuilder getRecipeBuilder();
-
     Option findOptionById(Integer optionId);
 
 //    List<CocktailType> getCocktailTypes();

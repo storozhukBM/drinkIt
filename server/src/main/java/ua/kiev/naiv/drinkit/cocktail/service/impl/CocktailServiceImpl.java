@@ -130,11 +130,6 @@ public class CocktailServiceImpl implements CocktailService {
 //    }
 
     @Override
-    public Recipe.RecipeBuilder getRecipeBuilder() {
-        return new Recipe.RecipeBuilder();
-    }
-
-    @Override
     public Option findOptionById(Integer optionId) {
         return optionRepository.findOne(optionId);
     }
