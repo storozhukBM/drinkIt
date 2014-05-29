@@ -3,6 +3,7 @@ package ua.kiev.naiv.drinkit.cocktail.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -49,5 +50,12 @@ public class CocktailType implements Serializable {
 
     public void setRecipes(Set<Recipe> recipes) {
         this.recipes = recipes;
+    }
+
+    @Override
+    public String toString() {
+        final ReflectionToStringBuilder reflectionToStringBuilder = new ReflectionToStringBuilder(this);
+        reflectionToStringBuilder.setExcludeFieldNames(new String[] {"recipes"});
+        return reflectionToStringBuilder.toString();
     }
 }

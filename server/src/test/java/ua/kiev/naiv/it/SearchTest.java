@@ -63,6 +63,5 @@ public class SearchTest extends AbstractTransactionalJUnit4SpringContextTests{
         Iterator<Option> iter = recipes.get(0).getOptions().iterator();
         System.out.println(iter.next().getId());
         System.out.println(iter.next().getId());
-        return;
     }
 }

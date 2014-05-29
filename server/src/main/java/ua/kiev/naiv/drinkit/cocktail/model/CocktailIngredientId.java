@@ -46,9 +46,7 @@ public class CocktailIngredientId implements Serializable {
     }
 
     @Transient
-    private void setId(int id) {
-
-    }
+    private void setId(int id) {}
 
     @Override
     public boolean equals(Object o) {
@@ -57,10 +55,8 @@ public class CocktailIngredientId implements Serializable {
 
         CocktailIngredientId that = (CocktailIngredientId) o;
 
-        if (!ingredient.equals(that.ingredient)) return false;
-        if (!recipe.equals(that.recipe)) return false;
+        return ingredient.equals(that.ingredient) && recipe.equals(that.recipe);
 
-        return true;
     }
 
     @Override
