@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.kiev.naiv.drinkit.cocktail.model.CocktailType;
 import ua.kiev.naiv.drinkit.cocktail.model.Ingredient;
 import ua.kiev.naiv.drinkit.cocktail.model.Option;
@@ -42,8 +43,11 @@ public class CocktailServiceImpl implements CocktailService {
     IngredientWithQuantityRepository ingredientWithQuantityRepository;
 
     @Override
+    @Transactional
     public Recipe create(Recipe recipe) {
-        return recipeRepository.save(recipe);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        LOGGER.info("Recipe saved: " + recipe.toString());
+        return savedRecipe;
     }
 
     @Override

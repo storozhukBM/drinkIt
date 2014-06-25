@@ -8,8 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.kiev.naiv.drinkit.cocktail.model.*;
 import ua.kiev.naiv.drinkit.cocktail.repository.*;
-import ua.kiev.naiv.drinkit.cocktail.model.RecipeBuilder;
-import ua.kiev.naiv.drinkit.cocktail.service.RecipeBuilderService;
+import ua.kiev.naiv.drinkit.cocktail.service.RecipeConfigurationService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class RecipeBuilderServiceImpl implements RecipeBuilderService {
+public class RecipeCreationServiceImpl implements RecipeConfigurationService {
 
     @Resource
     RecipeRepository recipeRepository;
@@ -34,25 +33,24 @@ public class RecipeBuilderServiceImpl implements RecipeBuilderService {
     @Resource
     IngredientWithQuantityRepository ingredientWithQuantityRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecipeBuilderServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecipeCreationServiceImpl.class);
 
     @Override
-    public RecipeBuilder getRecipeBuilder() {
-        return new RecipeBuilderImpl();
+    public RecipeConfigurationPOJO getRecipeConfiguration() {
+        return new RecipeConfigurationPOJO();
     }
 
     @Override
-    @Transactional
-    public Recipe buildAndSave(RecipeBuilder recipeBuilder) {
+    public Recipe configureRecipe(RecipeConfigurationPOJO recipeConfiguration) {
 
-        Integer[] ingredients = recipeBuilder.getIngredients();
-        Double[] quantities = recipeBuilder.getQuantities();
-        Integer[] options = recipeBuilder.getOptions();
-        String name = recipeBuilder.getName();
-        String description = recipeBuilder.getDescription();
-        Integer cocktailType = recipeBuilder.getCocktailType();
-        MultipartFile image = recipeBuilder.getImage();
-        MultipartFile thumbnail = recipeBuilder.getImage();
+        Integer[] ingredients = recipeConfiguration.getIngredients();
+        Double[] quantities = recipeConfiguration.getQuantities();
+        Integer[] options = recipeConfiguration.getOptions();
+        String name = recipeConfiguration.getName();
+        String description = recipeConfiguration.getDescription();
+        Integer cocktailType = recipeConfiguration.getCocktailType();
+        MultipartFile image = recipeConfiguration.getImage();
+        MultipartFile thumbnail = recipeConfiguration.getImage();
 
         Recipe recipe = new Recipe();
         Set<IngredientWithQuantity> ingredientWithQuantitySet = new HashSet<>();
@@ -76,20 +74,21 @@ public class RecipeBuilderServiceImpl implements RecipeBuilderService {
             optionsSet.add(optionRepository.findOne(optionId));
         }
 
+        recipe.setName(name);
+        recipe.setDescription(description);
+        recipe.setCocktailType(cocktailTypeRepository.findOne(cocktailType));
+        recipe.setIngredientsWithQuantities(ingredientWithQuantitySet);
+        recipe.setOptions(optionsSet);
+
         try {
-            recipe.setName(name);
-            recipe.setDescription(description);
-            recipe.setCocktailType(cocktailTypeRepository.findOne(cocktailType));
-            recipe.setIngredientsWithQuantities(ingredientWithQuantitySet);
-            recipe.setOptions(optionsSet);
             recipe.setImage(image.getBytes());
             recipe.setThumbnail(thumbnail.getBytes());
-            recipe = recipeRepository.save(recipe);
-            LOGGER.info("Recipe saved to DB: " + recipe.toString());
-
         } catch (IOException e) {
-            RecipeBuilderServiceImpl.LOGGER.error("Can't get bytes from image.", e);
+            RecipeCreationServiceImpl.LOGGER.error("Can't get bytes from image.", e);
         }
+
+        LOGGER.info("Recipe configured: " + recipe.toString());
+
         return recipe;
     }
 

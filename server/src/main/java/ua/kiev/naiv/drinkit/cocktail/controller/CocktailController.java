@@ -16,10 +16,10 @@ import ua.kiev.naiv.drinkit.cocktail.mixin.RecipeInfoResult;
 import ua.kiev.naiv.drinkit.cocktail.mixin.RecipeSearchResult;
 import ua.kiev.naiv.drinkit.cocktail.model.Ingredient;
 import ua.kiev.naiv.drinkit.cocktail.model.Recipe;
-import ua.kiev.naiv.drinkit.cocktail.model.RecipeBuilderImpl;
+import ua.kiev.naiv.drinkit.cocktail.model.RecipeConfigurationPOJO;
 import ua.kiev.naiv.drinkit.cocktail.search.Criteria;
 import ua.kiev.naiv.drinkit.cocktail.service.CocktailService;
-import ua.kiev.naiv.drinkit.cocktail.service.RecipeBuilderService;
+import ua.kiev.naiv.drinkit.cocktail.service.RecipeConfigurationService;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -45,12 +45,12 @@ public class CocktailController {
     MessageSource messageSource;
 
     @Autowired
-    RecipeBuilderService recipeBuilderService;
+    RecipeConfigurationService recipeConfigurationService;
 
     @RequestMapping(value = "/add-recipe", method = RequestMethod.GET)
     public ModelAndView recipePage() {
         ModelAndView modelAndView = new ModelAndView("recipe-page");
-        modelAndView.addObject("command", recipeBuilderService.getRecipeBuilder());
+        modelAndView.addObject("command", recipeConfigurationService.getRecipeConfiguration());
         modelAndView.addObject("options", cocktailService.getOptions());
         modelAndView.addObject("ingredients", cocktailService.getIngredients());
         modelAndView.addObject("cocktailTypes", cocktailService.getCocktailTypes());
@@ -59,7 +59,7 @@ public class CocktailController {
 
     @RequestMapping(value = "/add-recipe", method = RequestMethod.POST)
     public String addRecipe(
-            @Valid @ModelAttribute(value = "command") RecipeBuilderImpl builder,
+            @Valid @ModelAttribute(value = "command") RecipeConfigurationPOJO recipeConfiguration,
             BindingResult result,
             Model model
     ) {
@@ -71,14 +71,14 @@ public class CocktailController {
             return "recipe-page";
         }
 
-
-        recipeBuilderService.buildAndSave(builder);
+        Recipe configuredRecipe = recipeConfigurationService.configureRecipe(recipeConfiguration);
+        cocktailService.create(configuredRecipe);
 
         String successMessage = messageSource.getMessage("CocktailController.adding.success",
                 null, Locale.getDefault());
         model.addAttribute("successMessage", successMessage);
 
-        model.addAttribute("command", recipeBuilderService.getRecipeBuilder());
+        model.addAttribute("command", recipeConfigurationService.getRecipeConfiguration());
 
         return "recipe-page";
     }

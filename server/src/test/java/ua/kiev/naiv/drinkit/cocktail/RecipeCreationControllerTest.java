@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ua.kiev.naiv.drinkit.cocktail.model.RecipeBuilderImpl;
+import ua.kiev.naiv.drinkit.cocktail.model.RecipeConfigurationPOJO;
 import ua.kiev.naiv.drinkit.cocktail.service.CocktailService;
 import ua.kiev.naiv.drinkit.springconfig.AppConfig;
 import ua.kiev.naiv.drinkit.springconfig.WebConfig;
@@ -151,10 +151,10 @@ public class RecipeCreationControllerTest extends TestCase {
         ra.andExpect(model().attribute("cocktailTypes", listInitialized));
         ra.andExpect(model().hasErrors());
         ra.andExpect(model().attributeHasFieldErrors("command", "description"));
-        ra.andExpect(model().attribute("command", new BaseMatcher<RecipeBuilderImpl>() {
+        ra.andExpect(model().attribute("command", new BaseMatcher<RecipeConfigurationPOJO>() {
             @Override
             public boolean matches(Object item) {
-                RecipeBuilderImpl testRecipe = (RecipeBuilderImpl) item;
+                RecipeConfigurationPOJO testRecipe = (RecipeConfigurationPOJO) item;
                 return
                         arraysEqual(testRecipe.getIngredients(), ingredients) &&
                         arraysEqual(testRecipe.getQuantities(), quantities) &&

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 */
 
 @Embeddable
-public class RecipeBuilderImpl implements RecipeBuilder {
+public class RecipeConfigurationPOJO {
 
     @NotNull
     @Size(max=30)
