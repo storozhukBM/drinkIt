@@ -4,6 +4,7 @@ package ua.kiev.naiv.drinkit.springconfig;
  * @author pkolmykov
  */
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.hibernate.ejb.HibernatePersistence;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -83,4 +84,14 @@ public class AppConfig {
         multipartResolver.setMaxUploadSize(500000);
         return multipartResolver;
     }
+
+    @Bean
+    public SpringLiquibase dbMigrationResolver() {
+        SpringLiquibase springLiquibase = new SpringLiquibase();
+        springLiquibase.setChangeLog("classpath:db_changelog/changelog-master.xml");
+        springLiquibase.setDataSource(dataSource());
+        return springLiquibase;
+    }
+
+
 }
